@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <title>Profile</title>
+</head>
+<body>
+    <div class="1/2w-full max-w-xl container px-20 py-24 mx-auto mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
+         Name
+        </label>
+        <input class="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" value="{{data.Firstname}}"">
+        <label class="block text-gray-700 text-sm font-bold mb-2 py-2" for="email">
+         Email
+        </label>
+        <input class="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="email" type="text" value={{data.Email}}"" >
+        <label class="block text-gray-700 text-sm font-bold mb-2 py-2" for="email">
+            Phone
+         </label>
+        <input class="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="phone" type="text" value="{{data.Phone}}" >
+        <label class="block text-gray-700 text-sm font-bold mb-2 py-2" for="email">
+            Address
+        </label>
+        <input class="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="address" type="text" value="{{data.Address}}" >
+        <label class="block text-gray-700 text-sm font-bold mb-2 py-2" for="email">
+            State
+           </label>
+           <input class="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="state" type="text" value="{{data.State}}">
+           <label class="block text-gray-700 text-sm font-bold mb-2 py-2" for="email">
+            City
+           </label>
+           <input class="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="city" type="text" value="{{data.City}}">
+           <label class="block text-gray-700 text-sm font-bold mb-2 py-2" for="email">
+            Landmark
+           </label>
+           <input class="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="l_mark" type="text" value="{{data.Landmark}}" >
+           <label class="block text-gray-700 text-sm font-bold mb-2 py-2" for="email">
+            Bloodgroup
+           </label>
+           <input class="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="b_group" type="text" value="{{data.Bloodgroup}}">
+           <div class="flex items-center justify-between">
+            <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+              Edit
+            </button>
+          
+          
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+              Save
+            </button>
+            
+          </div>
+        </div>
+</body>
+</html>

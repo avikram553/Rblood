@@ -1,9 +1,12 @@
+import sys
+sys.setrecursionlimit(10**6) 
 from flask import Flask,request
 from flask import render_template
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import and_
 from flask_mail import Mail,Message
 from flask import g,session,flash
+
 
 
 app=Flask(__name__,template_folder='templates')
@@ -110,18 +113,67 @@ def Logout():
 
 
 #For Changing his profile details
-
+###############################################PROBLEM######################
 @app.route('/profile',methods=['GET','POST'])
 def profile():
     profile_data=Donor.query.filter(and_(Donor.Email.like(session['username']),Donor.Password.like(session['password']))).all()
 
     return render_template('profile.html',data=profile_data)
+#############################################################################
+#Redirecting to Forgot Password Page
+@app.route('/forgot_password')
+def forgot_password():
+    return render_template('forgot_password.html')
+
+#FLASH RESET LINK SENT
+@app.route('/reset_link/',methods=['GET','POST'])
+def reset_link():
+    if request.method=='POST':
+        email=request.form.get('email')
+        user=Donor.query.filter(Donor.Email.like(email)).all()
+        if len(user):
+            session['email']=email
+            with mail.connect() as conn:
+                msg=Message("Password Reset link",recipients=[email])
+                msg.html=render_template('/mails/reset_password.html',user=user)
+                conn.send(msg)
+                flash('Reset link has been sent to your Email id')
+            return render_template('loginpage.html')
+        else:
+            flash('User Not found Please register yourself')
+            return render_template('Join_as_aDonor.html')
+
+
+
+#Reset Passowrd page 
+@app.route('/resetpasspage/')
+def resetpasspage():
+    return render_template('newpassword.html')
+
+#Change Password update in Database
+@app.route('/reset_password/',methods=['GET','POST'])
+def reset_password():
+    if request.method=='POST':
+        setpassword=request.form.get('setpassword')
+        confirmpassword=request.form.get('confirmpassword')
+        if setpassword==confirmpassword:
+            finalpass=Donor.query.filter_by(Email=session['email']).update(dict(Password=setpassword))
+            db.session.commit()
+            session.pop('email',None)
+            return render_template('loginpage.html')
+        else:
+            return flash('Password did not match','error')
+
+
+    
+
 
 
 
 @app.route('/Find_a_DONOR/',methods=['GET','POST'])
 def find_donor():
     if request.method=='POST':
+        l=list()
         form_data=request.form
         name=form_data['full_name']
         email=form_data['email']
@@ -129,28 +181,28 @@ def find_donor():
         city=form_data['city']
         bloodgroup=form_data['b_group']
         phone=form_data['phone']
+        l.append(name)
+        l.append(phone)
+        l.append(email)
+        l.append(address)
+        l.append(bloodgroup)
+
         record=Donor.query.filter(and_(Donor.City.like(city),Donor.Bloodgroup.like(bloodgroup))).all()
         #return record[0]
         if len(record)==0:
             #No Donor Found Page 
             return 'No Donor Found'
         else:
-            front_msg='needs blood urgently, can you help him?'
+            
             with mail.connect() as conn:
-                ph='Phone: %s' %(phone)
-                email='Email: %s' %(email)
-                add='Address: %s' %(address)
-                message=name + front_msg + 'Here is the details:' + ph +email + add
-                subject='Urgent Blood required'
                 for i in record:
                     if i.Email==email:
                         record.remove(i)
-                        flag=True
+                        #flag=True
                     else:
                     
-                        msg=Message(recipients=[i.Email],
-                                    body=message,
-                                    subject=subject)
+                        msg=Message("Urgent Blood required",recipients=[i.Email])           
+                        msg.html=render_template('/mails/urgentbloodreq.html',form_data=l)
                         conn.send(msg)
 
             if len(record)==0:

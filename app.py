@@ -1,16 +1,36 @@
 import sys
+
+import sqlalchemy
 sys.setrecursionlimit(10**6) 
 from flask import Flask,request
 from flask import render_template
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import and_
 from flask_mail import Mail,Message
 from flask import g,session,flash
+import pyodbc
+import urllib
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String
 
+driver = "{ODBC Driver 17 for SQL Server}"
+server = "rblood.database.windows.net"
+database = "rblood"
+user = "avikram553"
+password = "Mystery619@"
+
+conn = f"""Driver={driver};Server=tcp:{server},1433;Database={database};
+Uid={user};Pwd={password};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"""
+
+params = urllib.parse.quote_plus(conn)
+conn_str = 'mssql+pyodbc:///?autocommit=true&odbc_connect={}'.format(params)
+engine = create_engine(conn_str, echo=True)
+
+#engine.execute("SELECT 1")
+base = declarative_base()
 
 
 app=Flask(__name__,template_folder='templates')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'rblood.database.windows.net'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key='123456789'
 app.config.update(
@@ -23,23 +43,24 @@ app.config.update(
 
 )
 mail=Mail(app)
-db=SQLAlchemy(app)
+
 
 #Creting Database column as an instance variable of class Donor
 
-class Donor(db.Model):
+class Donor(base):
+    __tablename__ = "DONOR"
     
-    Firstname=db.Column(db.String(20),unique=False)
-    Lastname=db.Column(db.String(20),unique=False)
-    Phone=db.Column(db.String(20),unique=True)
-    Email=db.Column(db.String(20),primary_key=True,unique=True)
-    Password=db.Column(db.String(20),unique=False)
-    Address=db.Column(db.String(120))
-    Pincode=db.Column(db.Integer,unique=False)
-    State=db.Column(db.String(15),unique=False)
-    City=db.Column(db.String(15),unique=False)
-    Landmark=db.Column(db.String(15),unique=False)
-    Bloodgroup=db.Column(db.String(4),unique=False)
+    Firstname= Column(String(20))
+    Lastname= Column(String(20))
+    Phone= Column(String(20),unique=True)
+    Email= Column(String(20),primary_key=True)
+    Password= Column(String(20))
+    Address= Column(String(120))
+    Pincode= Column(Integer)
+    State= Column(String(15))
+    City= Column(String(15))
+    Landmark= Column(String(15))
+    Bloodgroup= Column(String(4))
 
 @app.route("/")
 def home():
@@ -165,7 +186,7 @@ def reset_password():
             return flash('Password did not match','error')
 
 
-    
+     
 
 
 

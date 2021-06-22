@@ -7,6 +7,7 @@ from flask import render_template
 from sqlalchemy import and_
 from flask_mail import Mail,Message
 from flask import g,session,flash
+from sqlalchemy.orm import sessionmaker
 import pyodbc
 import urllib
 from sqlalchemy import create_engine
@@ -28,6 +29,8 @@ engine = create_engine(conn_str, echo=True)
 
 #engine.execute("SELECT 1")
 base = declarative_base()
+factory = sessionmaker(bind=engine)
+session = factory()
 
 
 app=Flask(__name__,template_folder='templates')
@@ -83,8 +86,8 @@ def index():
         Landmark=request.form.get('l_mark')
         Bloodgroup=request.form.get('b_group')
         entry=Donor(Firstname=Firstname,Lastname=Lastname,Phone=Phone,Password=Password,Email=Email,Address=Address,Pincode=Pincode,State=State,City=City,Landmark=Landmark,Bloodgroup=Bloodgroup)
-        db.session.add(entry)
-        db.session.commit()
+        session.add(entry)
+        session.commit()
         
         #Sending ThankYou mails for the newly registered Donors
         

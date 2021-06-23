@@ -1,5 +1,4 @@
 import sys
-import sqlalchemy
 sys.setrecursionlimit(10**6) 
 from flask import Flask,request,render_template,g,session,flash
 from flask_mail import Mail,Message

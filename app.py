@@ -3,7 +3,7 @@ sys.setrecursionlimit(10**6)
 from flask import Flask,request,render_template,g,session,flash
 from flask import Flask
 from flask_mail import Mail
-from flask_mail import Mail,Message
+from flask_mail import Message
 from sqlalchemy.orm import sessionmaker
 import pyodbc
 import urllib

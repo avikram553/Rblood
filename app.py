@@ -1,16 +1,13 @@
 import sys
 import sqlalchemy
 sys.setrecursionlimit(10**6) 
-from flask import Flask,request
-from flask import render_template
+from flask import Flask,request,render_template,g,session,flash
 from flask_mail import Mail,Message
-from flask import g,session,flash
 from sqlalchemy.orm import sessionmaker
 import pyodbc
 import urllib
 from sqlalchemy import create_engine,and_,Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
-
 driver = "{ODBC Driver 17 for SQL Server}"
 server = "rblood.database.windows.net"
 database = "rblood"
